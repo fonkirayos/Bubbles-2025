@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bubble : MonoBehaviour
 {
     public SpriteRenderer sprite;
-    public float scaleDownRate = 0.0f;
+    public float scaleDownRate = 0.1f;
     Animator animator;
     public bool isPopped = false;
     private void Awake()
@@ -45,7 +45,7 @@ public class Bubble : MonoBehaviour
         // Optionally, destroy the object if it's too small to be visible
         if (newScale.x <= 0.01f && newScale.y <= 0.01f)
         {
-            GameEventManager.Instance.NotifyObservers(EventType.Lose, null);
+            GameEventManager.Instance.NotifyObservers(EventType.TimeOut, null);
         }
     }
 

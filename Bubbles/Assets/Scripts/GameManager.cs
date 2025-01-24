@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 
 public class GameManager : MonoBehaviour, IObserver
 {
@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour, IObserver
     public List<Color> pointColors;
     public Bubble[] bubbles;
     public int Score = 0;
-
+    public TMPro.TMP_Text scoreText;
+    public TMPro.TMP_Text colorText;
     bool isPoint = false;
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour, IObserver
         InitializePointColors();
         ResetBubbles();
         RandomizePointColor();
+        ChangeColorText();
         Debug.Log("Color to get point " + point);
     }
 
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour, IObserver
             bubble.isPopped = false;
             bubble.resetAnimator();
             bubble.transform.localScale = Vector3.one;
-            bubble.scaleDownRate = 0f;
+            bubble.scaleDownRate = 0.5f;
             bubble.sprite.enabled = true;
             bubble.sprite.color = pointColors[n];
             n++;
@@ -73,15 +75,24 @@ public class GameManager : MonoBehaviour, IObserver
 
     void OnBubblePop(Color color)
     {
-        if(point == color)
+        if (point == color)
         {
-            
+
             Score++;
+            scoreText.text = Score.ToString();
             isPoint = true;
             //RandomizePointColor();
             //ShuffleColors();
             //ResetBubbles();
         }
+        else
+        {
+            Score--;
+            if(Score < 0)
+                Score = 0;  
+            scoreText.text = Score.ToString();
+        }
+            
     }
     public void OnNotify(EventType eventType, object eventData)
     {
@@ -95,6 +106,15 @@ public class GameManager : MonoBehaviour, IObserver
             case EventType.PopAnimationFinished:
                 ResetMiniGame();
                 break;
+            case EventType.TimeOut:
+                RandomizePointColor();
+                ShuffleColors();
+                ResetBubbles();
+                ChangeColorText();
+                isPoint = false;
+                break;
+            case EventType.Score:
+                break;
         }
 
     }
@@ -106,8 +126,43 @@ public class GameManager : MonoBehaviour, IObserver
             RandomizePointColor();
             ShuffleColors();
             ResetBubbles();
+            ChangeColorText();
             isPoint = false;
         }
        
+    }
+
+    void ChangeColorText()
+    {
+        if(point == Color.red)
+        {
+            colorText.color = Color.red;
+            colorText.text = "RED";
+        }
+        if (point == Color.blue)
+        {
+            colorText.color = Color.blue;
+            colorText.text = "BLUE";
+        }
+        if (point == Color.yellow)
+        {
+            colorText.color = Color.yellow;
+            colorText.text = "YELLOW";
+        }
+        if (point == Color.green)
+        {
+            colorText.color = Color.green;
+            colorText.text = "GREEN";
+        }
+        if (point == Color.magenta)
+        {
+            colorText.color = Color.magenta;
+            colorText.text = "PINK";
+        }
+    }
+
+    void Lose()
+    {
+
     }
 }
