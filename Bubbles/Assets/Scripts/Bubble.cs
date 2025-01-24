@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class Bubble : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    SpriteRenderer sprite;
+    public SpriteRenderer sprite;
     public float scaleDownRate = 0.0f;
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
-        
     }
     void Start()
     {
@@ -43,7 +41,8 @@ public class Bubble : MonoBehaviour
     private void OnMouseDown()
     {
         Debug.Log("Click down on Bubble");
-        sprite.color = Color.red;
+        //pop buble
+        GameEventManager.Instance.NotifyObservers(EventType.BubblePop, sprite.color);
         
     }
 
@@ -51,11 +50,7 @@ public class Bubble : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         Debug.Log("Click released on Bubble");
-        sprite.color = Color.white;
+       
     }
 
-    public void OnNotify(EventType eventType, object eventData)
-    {
-        
-    }
 }
