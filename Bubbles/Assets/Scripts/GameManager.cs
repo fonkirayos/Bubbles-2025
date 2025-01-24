@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour, IObserver
 {
@@ -7,6 +8,8 @@ public class GameManager : MonoBehaviour, IObserver
     public List<Color> pointColors;
     public Bubble[] bubbles;
     public int Score = 0;
+
+    bool isPoint = false;
     private void Awake()
     {
         GameEventManager.Instance.RegisterObserver(this);
@@ -54,8 +57,11 @@ public class GameManager : MonoBehaviour, IObserver
         int n = 0;
         foreach(Bubble bubble in bubbles)
         {
+            bubble.isPopped = false;
+            bubble.resetAnimator();
             bubble.transform.localScale = Vector3.one;
             bubble.scaleDownRate = 0f;
+            bubble.sprite.enabled = true;
             bubble.sprite.color = pointColors[n];
             n++;
         }
@@ -69,10 +75,12 @@ public class GameManager : MonoBehaviour, IObserver
     {
         if(point == color)
         {
+            
             Score++;
-            RandomizePointColor();
-            ShuffleColors();
-            ResetBubbles();
+            isPoint = true;
+            //RandomizePointColor();
+            //ShuffleColors();
+            //ResetBubbles();
         }
     }
     public void OnNotify(EventType eventType, object eventData)
@@ -82,14 +90,24 @@ public class GameManager : MonoBehaviour, IObserver
             case EventType.BubblePop:
                 OnBubblePop((Color)eventData);
                 break;
-            case EventType.TimeOut:
-                break;
-            case EventType.Score:
-                break;
             case EventType.Lose:
+                break;
+            case EventType.PopAnimationFinished:
+                ResetMiniGame();
                 break;
         }
 
     }
 
+    void ResetMiniGame()
+    {
+        if (isPoint)
+        {
+            RandomizePointColor();
+            ShuffleColors();
+            ResetBubbles();
+            isPoint = false;
+        }
+       
+    }
 }

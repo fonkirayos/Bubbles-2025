@@ -4,9 +4,12 @@ public class Bubble : MonoBehaviour
 {
     public SpriteRenderer sprite;
     public float scaleDownRate = 0.0f;
+    Animator animator;
+    public bool isPopped = false;
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
     void Start()
     {
@@ -16,7 +19,15 @@ public class Bubble : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ScaleDown();
+        if (!isPopped)
+        {
+            ScaleDown();
+        }
+
+        if(isPopped)
+        {
+           checkPopAnimationEnd();
+        }
     }
 
     private void ScaleDown()
@@ -34,23 +45,38 @@ public class Bubble : MonoBehaviour
         // Optionally, destroy the object if it's too small to be visible
         if (newScale.x <= 0.01f && newScale.y <= 0.01f)
         {
-            Destroy(gameObject);
+            GameEventManager.Instance.NotifyObservers(EventType.Lose, null);
         }
     }
 
     private void OnMouseDown()
     {
-        Debug.Log("Click down on Bubble");
-        //pop buble
-        GameEventManager.Instance.NotifyObservers(EventType.BubblePop, sprite.color);
+        if (!isPopped)
+        {
+            Debug.Log("Click down on Bubble");
+            GameEventManager.Instance.NotifyObservers(EventType.BubblePop, sprite.color);
+            isPopped = true;
+            animator.SetBool("isPopped", true);
+        }
         
     }
 
-    
-    private void OnMouseUpAsButton()
+    void checkPopAnimationEnd()
     {
-        Debug.Log("Click released on Bubble");
-       
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.IsName("BubblePop") && stateInfo.normalizedTime >= 1.0f)
+        {
+            // Animation has ended
+            Debug.Log("Animation has ended");
+            sprite.enabled = false;
+            GameEventManager.Instance.NotifyObservers(EventType.PopAnimationFinished, null);  
+        }
     }
 
+    public void resetAnimator()
+    {
+        animator.SetBool("isPopped", false);
+        animator.Play(0);
+    }
 }
