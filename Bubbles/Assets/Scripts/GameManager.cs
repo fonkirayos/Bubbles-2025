@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour, IObserver
 {
@@ -8,8 +9,13 @@ public class GameManager : MonoBehaviour, IObserver
     public List<Color> pointColors;
     public Bubble[] bubbles;
     public int Score = 0;
+
     public TMPro.TMP_Text scoreText;
     public TMPro.TMP_Text colorText;
+
+    public GameObject blackScreen;
+    public Button retryButton;
+    public Button quitButton;
     bool isPoint = false;
     private void Awake()
     {
@@ -81,9 +87,6 @@ public class GameManager : MonoBehaviour, IObserver
             Score++;
             scoreText.text = Score.ToString();
             isPoint = true;
-            //RandomizePointColor();
-            //ShuffleColors();
-            //ResetBubbles();
         }
         else
         {
@@ -107,11 +110,7 @@ public class GameManager : MonoBehaviour, IObserver
                 ResetMiniGame();
                 break;
             case EventType.TimeOut:
-                RandomizePointColor();
-                ShuffleColors();
-                ResetBubbles();
-                ChangeColorText();
-                isPoint = false;
+                GameOver();
                 break;
             case EventType.Score:
                 break;
@@ -121,6 +120,15 @@ public class GameManager : MonoBehaviour, IObserver
 
     void ResetMiniGame()
     {
+        RandomizePointColor();
+        ShuffleColors();
+        ResetBubbles();
+        ChangeColorText();
+        isPoint = false;
+    }
+
+    void ResetMiniGameOnPoint()
+    {
         if (isPoint)
         {
             RandomizePointColor();
@@ -129,9 +137,7 @@ public class GameManager : MonoBehaviour, IObserver
             ChangeColorText();
             isPoint = false;
         }
-       
     }
-
     void ChangeColorText()
     {
         if(point == Color.red)
@@ -161,8 +167,33 @@ public class GameManager : MonoBehaviour, IObserver
         }
     }
 
-    void Lose()
+    void GameOver()
     {
+        blackScreen.SetActive(true);
+        retryButton.gameObject.SetActive(true);
+        quitButton.gameObject.SetActive(true);
+        Time.timeScale = 0f;
+    }
 
+    public void RetryGame()
+    {
+        Debug.Log("Retrying");
+        Time.timeScale = 1f;
+        Score = 0;
+        scoreText.text = Score.ToString();
+        ResetMiniGame();
+
+        blackScreen.SetActive(false);
+        retryButton.gameObject.SetActive(false);
+        quitButton.gameObject.SetActive(false);
+
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
     }
 }
