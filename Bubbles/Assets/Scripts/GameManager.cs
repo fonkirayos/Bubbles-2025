@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour, IObserver
     public GameObject blackScreen;
     public Button retryButton;
     public Button quitButton;
+
+    float initialScaleDownRate = 0.0f;
+    float scaleDownRate = 0.0f;
+    float scaleDownStep = 0.04f;
     bool isPoint = false;
     private void Awake()
     {
@@ -27,9 +31,7 @@ public class GameManager : MonoBehaviour, IObserver
     {
         bubbles = Object.FindObjectsOfType<Bubble>();
         InitializePointColors();
-        ResetBubbles();
-        RandomizePointColor();
-        ChangeColorText();
+        ResetMiniGame();
         Debug.Log("Color to get point " + point);
     }
 
@@ -68,7 +70,7 @@ public class GameManager : MonoBehaviour, IObserver
             bubble.isPopped = false;
             bubble.resetAnimator();
             bubble.transform.localScale = Vector3.one;
-            bubble.scaleDownRate = 0.5f;
+            bubble.scaleDownRate = scaleDownRate;
             bubble.sprite.enabled = true;
             bubble.sprite.color = pointColors[n];
             n++;
@@ -86,6 +88,7 @@ public class GameManager : MonoBehaviour, IObserver
 
             Score++;
             scoreText.text = Score.ToString();
+            scaleDownRate += scaleDownStep;
             isPoint = true;
         }
         else
@@ -107,7 +110,7 @@ public class GameManager : MonoBehaviour, IObserver
             case EventType.Lose:
                 break;
             case EventType.PopAnimationFinished:
-                ResetMiniGame();
+                ResetMiniGameOnPoint();
                 break;
             case EventType.TimeOut:
                 GameOver();
@@ -125,6 +128,7 @@ public class GameManager : MonoBehaviour, IObserver
         ResetBubbles();
         ChangeColorText();
         isPoint = false;
+        scaleDownRate = initialScaleDownRate;
     }
 
     void ResetMiniGameOnPoint()
@@ -169,10 +173,13 @@ public class GameManager : MonoBehaviour, IObserver
 
     void GameOver()
     {
-        blackScreen.SetActive(true);
-        retryButton.gameObject.SetActive(true);
-        quitButton.gameObject.SetActive(true);
-        Time.timeScale = 0f;
+        if (!isPoint)
+        {
+            blackScreen.SetActive(true);
+            retryButton.gameObject.SetActive(true);
+            quitButton.gameObject.SetActive(true);
+            Time.timeScale = 0f;
+        }
     }
 
     public void RetryGame()
@@ -181,6 +188,7 @@ public class GameManager : MonoBehaviour, IObserver
         Time.timeScale = 1f;
         Score = 0;
         scoreText.text = Score.ToString();
+        scaleDownRate = 0.0f;
         ResetMiniGame();
 
         blackScreen.SetActive(false);
