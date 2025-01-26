@@ -149,7 +149,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: adc61b384edfa3549bfb095bcb165c45, type: 3}
   m_Resource: {fileID: 8300000, guid: adc61b384edfa3549bfb095bcb165c45, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1147,7 +1147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1283882883
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1601,7 +1601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1611316017
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1862,13 +1862,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2086777803}
   - component: {fileID: 2086777804}
+  - component: {fileID: 2086777805}
   m_Layer: 0
   m_Name: PopSound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2086777803
 Transform:
   m_ObjectHideFlags: 0
@@ -1894,10 +1895,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 03a900aa8dfb1574c88b179aad602710, type: 3}
-  m_Resource: {fileID: 8300000, guid: 03a900aa8dfb1574c88b179aad602710, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6f14cd9c6503ef441b5b7896f4fc3c65, type: 3}
+  m_Resource: {fileID: 8300000, guid: 6f14cd9c6503ef441b5b7896f4fc3c65, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1981,6 +1982,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2086777805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086777802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0e91154e0b32b4ab52af1ff6f5a467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5701968869856631680
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -17,12 +17,16 @@ public class PopSound : MonoBehaviour, IObserver
                 break;
             case EventType.Lose:
                 break;
+            case EventType.PopAnimationFinished:
+                
+                break;
         }
 
     }
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        GameEventManager.Instance.RegisterObserver(this);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,8 +40,9 @@ public class PopSound : MonoBehaviour, IObserver
         
     }
 
-    void playSource() 
+    void playSource()
     {
+        Debug.Log("play popped audio");
         audioSource.Play();
     }
 }
